@@ -1,0 +1,16 @@
+.deviceList {
+  list-style: none;
+}
+
+.device {
+  display: flex;
+  justify-content: space-between;
+}
+
+.deviceInfo {
+  display: flex;
+}
+
+.deviceControls {
+  flex-grow: 0;
+}
