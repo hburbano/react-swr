@@ -30,11 +30,10 @@ const DeviceList = () => {
             onChange={(ev) => {
               setFilterBy(ev.currentTarget.value as FilterOptions)
             }}
+            value={filterBy}
           >
             <option value="ALL">All</option>
-            <option value="WINDOWS_SERVER" selected>
-              Windows Server
-            </option>
+            <option value="WINDOWS_SERVER">Windows Server</option>
             <option value="WINDOWS_WORKSTATION">Windows WorkStation</option>
             <option value="MAC">MAC</option>
           </select>
@@ -47,10 +46,9 @@ const DeviceList = () => {
             onChange={(ev) => {
               setSortBy(ev.currentTarget.value as SortOptions)
             }}
+            value={sortBy}
           >
-            <option value="system_name" selected>
-              System Name
-            </option>
+            <option value="system_name">System Name</option>
             <option value="type">Type</option>
             <option value="hdd_capacity">HDD Capacity</option>
           </select>

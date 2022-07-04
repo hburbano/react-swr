@@ -1,19 +1,14 @@
 import { beforeEach, describe, it, expect } from 'vitest'
 import { DeviceList } from './DeviceList'
 import { render, screen } from '@testing-library/react'
+import { BrowserRouter } from 'react-router-dom'
 
 describe('DeviceList', () => {
   beforeEach(() => {
     render(
-      <DeviceList
-        devices={[
-          { id: '1', system_name: 'dev-1', type: 'mac', hdd_capacity: 15 },
-          { id: '2', system_name: 'dev-2', type: 'mac', hdd_capacity: 15 },
-        ]}
-        onDelete={() => {}}
-        onUpdate={() => {}}
-        onCreate={() => {}}
-      />
+      <BrowserRouter>
+        <DeviceList />
+      </BrowserRouter>
     )
   })
   it('should render list and filters', () => {
