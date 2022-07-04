@@ -1,36 +1,70 @@
 import { Device } from './Device'
 import classes from './components.module.css'
+import { useDevices } from './hooks'
+import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
-interface DeviceListProps {
-  devices: Device[]
-  onDelete: Function
-  onCreate: Function
-  onUpdate: Function
-}
+type SortOptions = 'system_name' | 'type' | 'hdd_capacity'
+type FilterOptions = 'ALL' | 'WINDOWS_SERVER' | 'WINDOWS_WORKSTATION' | 'MAC'
 
-const DeviceList = ({ devices, onDelete, onCreate, onUpdate }: DeviceListProps) => {
+const DeviceList = () => {
+  const { devices, onDelete } = useDevices()
+  const [sortBy, setSortBy] = useState<SortOptions>('system_name')
+  const [filterBy, setFilterBy] = useState<FilterOptions>('ALL')
+
+  const sortedDevices = devices.sort((deviceA, deviceB) =>
+    deviceA[sortBy].localeCompare(deviceB[sortBy])
+  )
+  const filteredDevices = sortedDevices.filter((device) =>
+    filterBy === 'ALL' ? true : device.type === filterBy
+  )
+
   return (
     <div className={classes.deviceList}>
       <h1>Device Manager</h1>
       <div className={classes.deviceListFilters}>
         <label>
-          Device Type <input type="text"></input>
+          Device Type
+          <select
+            name="type"
+            onChange={(ev) => {
+              setFilterBy(ev.currentTarget.value as FilterOptions)
+            }}
+          >
+            <option value="ALL">All</option>
+            <option value="WINDOWS_SERVER" selected>
+              Windows Server
+            </option>
+            <option value="WINDOWS_WORKSTATION">Windows WorkStation</option>
+            <option value="MAC">MAC</option>
+          </select>
         </label>
 
         <label>
-          Sort By <input type="text"></input>
+          Sort By
+          <select
+            name="sort"
+            onChange={(ev) => {
+              setSortBy(ev.currentTarget.value as SortOptions)
+            }}
+          >
+            <option value="system_name" selected>
+              System Name
+            </option>
+            <option value="type">Type</option>
+            <option value="hdd_capacity">HDD Capacity</option>
+          </select>
         </label>
       </div>
       <ul data-testid="device-list">
-        {devices.map((device) => (
-          <Device
-            key={device.system_name}
-            {...device}
-            handleDelete={onDelete}
-            handleUpdate={onUpdate}
-          />
+        {filteredDevices.map((device: Device) => (
+          <Device key={device.system_name} {...device} handleDelete={onDelete} />
         ))}
       </ul>
+
+      <div>
+        <Link to={'/devices/create'}>Create</Link>
+      </div>
     </div>
   )
 }

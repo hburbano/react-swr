@@ -6,6 +6,9 @@
   display: flex;
   justify-content: space-between;
 }
+.device span {
+  margin-right: 1rem;
+}
 
 .deviceInfo {
   display: flex;
