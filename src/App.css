@@ -1,18 +1,8 @@
 .App {
   display: flex;
-  text-align: center;
-  background-color: #282c34;
+  background-color: var(--main-bg-color);
   min-height: 100vh;
-  color: white;
+  color: var(--main-text-color);
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.App-header {
-  font-size: calc(10px + 2vmin);
-}
-
-.App-link {
-  color: #61dafb;
+  padding: 1rem 3rem;
 }

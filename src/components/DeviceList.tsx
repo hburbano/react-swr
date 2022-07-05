@@ -22,9 +22,10 @@ const DeviceList = () => {
   return (
     <div className={classes.deviceList}>
       <h1>Device Manager</h1>
+
       <div className={classes.deviceListFilters}>
-        <label>
-          Device Type
+        <label className={classes.deviceFilter}>
+          <span>Device Type</span>
           <select
             name="type"
             onChange={(ev) => {
@@ -39,8 +40,8 @@ const DeviceList = () => {
           </select>
         </label>
 
-        <label>
-          Sort By
+        <label className={classes.deviceFilter}>
+          <span>Sort By</span>
           <select
             name="sort"
             onChange={(ev) => {
@@ -54,14 +55,28 @@ const DeviceList = () => {
           </select>
         </label>
       </div>
-      <ul data-testid="device-list">
-        {filteredDevices.map((device: Device) => (
-          <Device key={device.system_name} {...device} handleDelete={onDelete} />
-        ))}
+
+      <ul className={classes.deviceList} data-testid="device-list">
+        <li className={classes.device}>
+          <div className={classes.deviceInfo}>
+            <span>System Name</span>
+            <span>Type</span>
+            <span>HDD Capacity</span>
+          </div>
+        </li>
+        {filteredDevices.length > 0 ? (
+          filteredDevices.map((device: Device) => (
+            <Device key={device.system_name} {...device} handleDelete={onDelete} />
+          ))
+        ) : (
+          <span className={classes.noDevices}>No Devices Available</span>
+        )}
       </ul>
 
-      <div>
-        <Link to={'/devices/create'}>Create</Link>
+      <div className={classes.deviceNavigate}>
+        <Link to={'/devices/create'}>
+          <button>Create Device</button>
+        </Link>
       </div>
     </div>
   )
