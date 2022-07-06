@@ -9,7 +9,6 @@ function App() {
     <div className="App">
       <SWRConfig
         value={{
-          // refreshInterval: 3000,
           fetcher,
         }}
       >
