@@ -1,24 +1,38 @@
 import { Device } from './Device'
 import classes from './components.module.css'
-import { useDevices } from './hooks'
-import { Link } from 'react-router-dom'
+import { useDevices, useQuery } from './hooks'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 type SortOptions = 'system_name' | 'type' | 'hdd_capacity'
 type FilterOptions = 'ALL' | 'WINDOWS_SERVER' | 'WINDOWS_WORKSTATION' | 'MAC'
+type PageParams = { sortBy: SortOptions; filterBy: FilterOptions }
 
 const DeviceList = () => {
+  const query = useQuery()
   const { devices, onDelete } = useDevices()
-  const [sortBy, setSortBy] = useState<SortOptions>('system_name')
-  const [filterBy, setFilterBy] = useState<FilterOptions>('ALL')
+  const navigate = useNavigate()
+  const [params, setParams] = useState<PageParams>({
+    sortBy: 'system_name',
+    filterBy: 'ALL',
+    ...query,
+  })
 
-  const sortedDevices = devices.sort((deviceA, deviceB) =>
-    deviceA[sortBy].localeCompare(deviceB[sortBy], undefined, {
-      numeric: sortBy === 'hdd_capacity',
+  const handleParams = (newParams: PageParams) => {
+    setParams(newParams)
+    const urlParams = new URLSearchParams(newParams)
+    const qs = `?${urlParams.toString()}`
+    navigate(`/${qs}`)
+  }
+
+  const sortedDevices = devices.sort((deviceA, deviceB) => {
+    return deviceA[params.sortBy].localeCompare(deviceB[params.sortBy], undefined, {
+      numeric: params.sortBy === 'hdd_capacity',
     })
-  )
+  })
+
   const filteredDevices = sortedDevices.filter((device) =>
-    filterBy === 'ALL' ? true : device.type === filterBy
+    params.filterBy === 'ALL' ? true : device.type === params.filterBy
   )
 
   return (
@@ -31,9 +45,9 @@ const DeviceList = () => {
           <select
             name="type"
             onChange={(ev) => {
-              setFilterBy(ev.currentTarget.value as FilterOptions)
+              handleParams({ ...params, filterBy: ev.currentTarget.value as FilterOptions })
             }}
-            value={filterBy}
+            value={params.filterBy}
           >
             <option value="ALL">All</option>
             <option value="WINDOWS_SERVER">Windows Server</option>
@@ -47,9 +61,9 @@ const DeviceList = () => {
           <select
             name="sort"
             onChange={(ev) => {
-              setSortBy(ev.currentTarget.value as SortOptions)
+              handleParams({ ...params, sortBy: ev.currentTarget.value as SortOptions })
             }}
-            value={sortBy}
+            value={params.sortBy}
           >
             <option value="system_name">System Name</option>
             <option value="type">Type</option>
@@ -68,7 +82,7 @@ const DeviceList = () => {
         </li>
         {filteredDevices.length > 0 ? (
           filteredDevices.map((device: Device) => (
-            <Device key={device.system_name} {...device} handleDelete={onDelete} />
+            <Device key={device.id || device.system_name} {...device} handleDelete={onDelete} />
           ))
         ) : (
           <span className={classes.noDevices}>No Devices Available</span>
