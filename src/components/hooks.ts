@@ -1,4 +1,5 @@
 import useSWR, { mutate } from 'swr'
+import { useLocation } from 'react-router-dom'
 
 //Will use .env on prod
 const BASE_URL = 'http://localhost:3000'
@@ -55,7 +56,7 @@ const useDevice = (deviceId?: string) => {
   }
 
   return {
-    device: data || { system_name: '', hdd_capacity: '', type: '' },
+    device: data || {},
     error,
     isLoading: !data,
     onUpdate,
@@ -63,4 +64,18 @@ const useDevice = (deviceId?: string) => {
   }
 }
 
-export { useDevice, useDevices }
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+function useQuery() {
+  const qs = new URLSearchParams(useLocation().search)
+  return urlSearchToObject(qs)
+}
+
+const urlSearchToObject = (params: Record<string, any>) =>
+  [...params.entries()].reduce((acc, tuple) => {
+    const [key, val] = tuple
+    acc[key] = val
+    return acc
+  }, {})
+
+export { useDevice, useDevices, useQuery }

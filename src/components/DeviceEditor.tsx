@@ -33,7 +33,15 @@ const DeviceEditor = () => {
     setIsValid(checkInput)
     if (checkInput) {
       deviceId ? onUpdate(values) : onCreate(values)
-      navigate('/')
+      handleBack()
+    }
+  }
+
+  const handleBack = () => {
+    if (window.history.state && window.history.state.idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/', { replace: true })
     }
   }
 
@@ -75,13 +83,7 @@ const DeviceEditor = () => {
         </label>
         <div className={classes.deviceEditorControls}>
           <span>{isValid ? '' : '* Please provided missing fields'}</span>
-          <button
-            onClick={() => {
-              navigate(-1)
-            }}
-          >
-            Cancel
-          </button>
+          <button onClick={handleBack}>Cancel</button>
           <button onClick={handleSubmit}>{deviceId ? 'Update' : 'Create'}</button>
         </div>
       </div>
