@@ -13,7 +13,9 @@ const DeviceList = () => {
   const [filterBy, setFilterBy] = useState<FilterOptions>('ALL')
 
   const sortedDevices = devices.sort((deviceA, deviceB) =>
-    deviceA[sortBy].localeCompare(deviceB[sortBy])
+    deviceA[sortBy].localeCompare(deviceB[sortBy], undefined, {
+      numeric: sortBy === 'hdd_capacity',
+    })
   )
   const filteredDevices = sortedDevices.filter((device) =>
     filterBy === 'ALL' ? true : device.type === filterBy
