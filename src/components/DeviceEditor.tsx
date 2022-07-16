@@ -4,10 +4,16 @@ import { useDevice } from './hooks'
 import { useEffect, useState } from 'react'
 
 const DeviceEditor = () => {
+  const initialValues: Device = {
+    system_name: '',
+    hdd_capacity: '',
+    type: 'WINDOWS_SERVER',
+  }
+
   const navigate = useNavigate()
   const { deviceId } = useParams()
   const { device, onUpdate, onCreate } = useDevice(deviceId)
-  const [values, setValues] = useState<Device>({ ...device })
+  const [values, setValues] = useState<Device>({ ...initialValues, ...device })
   const [isValid, setIsValid] = useState(true)
 
   const handleChange = (name: keyof Device, value: string) => {
@@ -16,7 +22,7 @@ const DeviceEditor = () => {
 
   useEffect(() => {
     if (deviceId) {
-      setValues({ ...device })
+      setValues({ ...device } as Device)
     }
   }, [device, deviceId])
 
@@ -40,7 +46,7 @@ const DeviceEditor = () => {
           <input
             type="text"
             required={!isValid}
-            value={values.system_name || ''}
+            value={values.system_name}
             onChange={(evn) => handleChange('system_name', evn.currentTarget.value)}
           />
         </label>
@@ -50,7 +56,7 @@ const DeviceEditor = () => {
           <select
             name="type"
             onChange={(evn) => handleChange('type', evn.currentTarget.value)}
-            value={values.type || 'WINDOWS_SERVER'}
+            value={values.type}
           >
             <option value="WINDOWS_SERVER">Windows Server</option>
             <option value="WINDOWS_WORKSTATION">Windows WorkStation</option>
@@ -63,7 +69,7 @@ const DeviceEditor = () => {
           <input
             type="number"
             required={!isValid}
-            value={values.hdd_capacity || ''}
+            value={values.hdd_capacity}
             onChange={(evn) => handleChange('hdd_capacity', evn.currentTarget.value)}
           />
         </label>
@@ -71,7 +77,7 @@ const DeviceEditor = () => {
           <span>{isValid ? '' : '* Please provided missing fields'}</span>
           <button
             onClick={() => {
-              navigate('/')
+              navigate(-1)
             }}
           >
             Cancel
