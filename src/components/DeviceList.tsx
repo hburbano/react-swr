@@ -1,6 +1,6 @@
 import { Device } from './Device'
 import classes from './components.module.css'
-import { useDevices, useQuery } from './hooks'
+import { useDevices, useQuery, deleteDevice } from './hooks'
 import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
@@ -10,7 +10,7 @@ type PageParams = { sortBy: SortOptions; filterBy: FilterOptions }
 
 const DeviceList = () => {
   const query = useQuery()
-  const { devices, onDelete } = useDevices()
+  const { devices } = useDevices()
   const navigate = useNavigate()
   const [params, setParams] = useState<PageParams>({
     sortBy: 'system_name',
@@ -25,7 +25,7 @@ const DeviceList = () => {
     navigate(`/${qs}`)
   }
 
-  const sortedDevices = devices.sort((deviceA, deviceB) => {
+  const sortedDevices = devices?.sort((deviceA, deviceB) => {
     return deviceA[params.sortBy].localeCompare(deviceB[params.sortBy], undefined, {
       numeric: params.sortBy === 'hdd_capacity',
     })
@@ -81,8 +81,8 @@ const DeviceList = () => {
           </div>
         </li>
         {filteredDevices.length > 0 ? (
-          filteredDevices.map((device: Device) => (
-            <Device key={device.id || device.system_name} {...device} handleDelete={onDelete} />
+          filteredDevices.map((device: Device, idx) => (
+            <Device key={`${device.system_name}-${idx}`} {...device} handleDelete={deleteDevice} />
           ))
         ) : (
           <span className={classes.noDevices}>No Devices Available</span>

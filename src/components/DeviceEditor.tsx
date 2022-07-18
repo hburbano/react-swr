@@ -1,6 +1,6 @@
 import classes from './components.module.css'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useDevice } from './hooks'
+import { useDevice, updateDevice, createDevice } from './hooks'
 import { useEffect, useState } from 'react'
 
 const DeviceEditor = () => {
@@ -12,7 +12,7 @@ const DeviceEditor = () => {
 
   const navigate = useNavigate()
   const { deviceId } = useParams()
-  const { device, onUpdate, onCreate } = useDevice(deviceId)
+  const { device } = useDevice(deviceId)
   const [values, setValues] = useState<Device>({ ...initialValues, ...device })
   const [isValid, setIsValid] = useState(true)
 
@@ -32,7 +32,7 @@ const DeviceEditor = () => {
     }, true)
     setIsValid(checkInput)
     if (checkInput) {
-      deviceId ? onUpdate(values) : onCreate(values)
+      deviceId ? updateDevice(values) : createDevice(values)
       handleBack()
     }
   }

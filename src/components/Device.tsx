@@ -15,9 +15,11 @@ const Device = ({ id, system_name, type, hdd_capacity, handleDelete }: DevicePro
       </div>
       <div className={classes.deviceControls}>
         <Link to={`/devices/${id}`}>
-          <button>Update</button>
+          <button disabled={!id}>Update</button>
         </Link>
-        <button onClick={() => handleDelete(id)}>Delete</button>
+        <button disabled={!id} onClick={() => handleDelete(id)}>
+          Delete
+        </button>
       </div>
     </li>
   )
